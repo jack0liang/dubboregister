@@ -157,7 +157,7 @@ public class DubboRegisterPlugin extends AbstractMojo {
             String paramName = parameter.getName();
             if("userId".equals(paramName))
                 paramName = "sessionUserId";
-            if(parameters.length==1&&paramType.startsWith("com.gialen."))
+            else if(parameters.length==1&&paramType.startsWith("com.gialen."))
                 paramName = "";
             ipstmt.setString(4,paramName);
             ipstmt.addBatch();
