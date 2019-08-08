@@ -89,7 +89,7 @@ public class DubboRegisterPlugin extends AbstractMojo {
     String findMethodParam = "select * from dubbo_method_param where service_key=? order by position";
     String addDubboInterface = "insert into dubbo_interface(service_key,interface_name,method,update_by)values(?,?,?,0)";
     String delMethodParam = "delete from dubbo_method_param where service_key=?";
-    String addMethodParam = "insert into dubbo_method_param(service_key,type,position,param_name) values (?,?,?,?)";
+    String addMethodParam = "insert into dubbo_method_param(service_key,type,position,param_name,is_user_id,is_all) values (?,?,?,?,?,?)";
 
     private void registerInterface(Class clz, Connection conn, String keyPrefix) throws SQLException {
         getLog().info("process "+clz.getName());
@@ -155,11 +155,15 @@ public class DubboRegisterPlugin extends AbstractMojo {
             ipstmt.setString(2,paramType);
             ipstmt.setInt(3,i);
             String paramName = parameter.getName();
-            if("userId".equals(paramName))
-                paramName = "sessionUserId";
-            else if(parameters.length==1&&paramType.startsWith("com.gialen."))
-                paramName = "";
             ipstmt.setString(4,paramName);
+            if("userId".equals(paramName))
+                ipstmt.setBoolean(5,true);
+            else
+                ipstmt.setBoolean(5,false);
+            if(parameters.length==1&&paramType.startsWith("com.gialen."))
+                ipstmt.setBoolean(6,true);
+            else
+                ipstmt.setBoolean(6,false);
             ipstmt.addBatch();
             getLog().info(serviceKey+" add method param:"+paramType+" "+paramName+";position:"+i);
         }
