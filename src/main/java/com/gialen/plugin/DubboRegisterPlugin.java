@@ -144,6 +144,8 @@ public class DubboRegisterPlugin extends AbstractMojo {
             }
             if (isDelete)
                 deleteMethodParam(conn, serviceKey);
+            else
+                return ;
         }
         if(parameters.length==0)
             return ;
